@@ -15,7 +15,7 @@ bool is_DSS(vector<int>& s,int v){
 	unordered_map<int,int> mp;
 
 	mp[0]=1;
-	;
+	
 	bool ans = true;
 	for(int i=0;i<s.size();i++){
 		for(int j=0;j<s.size();j++){
@@ -64,9 +64,9 @@ bool is_DSS_2(vector<int>& s,set<int>& diff,int v){
 
 
 
-void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//«Ø¥ß¤@­Ó (v,k,2) ªº DSS
+void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//ï¿½Ø¥ß¤@ï¿½ï¿½ (v,k,2) ï¿½ï¿½ DSS
 
-	//«Ø¥ß d1 
+	//ï¿½Ø¥ï¿½ d1 
 	d1.push_back(0);
 	
 	
@@ -80,7 +80,7 @@ void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//«Ø¥ß¤@­Ó (v,k,2) ªº DSS
 		d1.push_back(t);
 	
 		
-		if(!is_DSS(d1,v)){			//¦³­«½Æ¼Æ¦r or ¤£¬ODSS §R°£¨Ã­«·s§ä¼Æ¦r 
+		if(!is_DSS(d1,v)){			//ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼Æ¦r or ï¿½ï¿½ï¿½ODSS ï¿½Rï¿½ï¿½ï¿½Ã­ï¿½ï¿½sï¿½ï¿½Æ¦r 
 			
 			d1.pop_back();
 		}
@@ -95,9 +95,9 @@ void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//«Ø¥ß¤@­Ó (v,k,2) ªº DSS
 	}
 	
 	
-	//¬ö¿ý d1ªº diff
+	//ï¿½ï¿½ï¿½ï¿½ d1ï¿½ï¿½ diff
 	 
-	set<int> diff;		//Àx¦s®t­È 
+	set<int> diff;		//ï¿½xï¿½sï¿½tï¿½ï¿½ 
 	
 	for(int i=0;i<d1.size();i++){
 		for(int j=0;j<d1.size();j++){
@@ -112,7 +112,7 @@ void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//«Ø¥ß¤@­Ó (v,k,2) ªº DSS
 	}
 	
 	
-	//«Ø¥ß d2
+	//ï¿½Ø¥ï¿½ d2
 	d2.push_back(0);
 	count=0;
 	while(d2.size()<k){
@@ -123,7 +123,7 @@ void DSS(int v,int k,vector<int>& d1,vector<int>&d2){	//«Ø¥ß¤@­Ó (v,k,2) ªº DSS
 		d2.push_back(t);
 		
 		
-		if(!is_DSS_2(d2,diff,v)){		//¦³­«½Æ¼Æ¦r or ¤£¬ODSS §R°£¨Ã­«·s§ä¼Æ¦r 
+		if(!is_DSS_2(d2,diff,v)){		//ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼Æ¦r or ï¿½ï¿½ï¿½ODSS ï¿½Rï¿½ï¿½ï¿½Ã­ï¿½ï¿½sï¿½ï¿½Æ¦r 
 			
 			d2.pop_back();
 		}
@@ -206,7 +206,7 @@ int main(){
 	srand(time(0));
 	int v=450;		//	v	>	k*(k-1)
 	int k=12;
-	int a = 7;		//­n¸ò v ¤¬½è 
+	int a = 7;		//ï¿½nï¿½ï¿½ v ï¿½ï¿½ï¿½ï¿½ 
 
 	/*
 	vector<int> d1(k,0);
@@ -237,7 +237,7 @@ int main(){
 	if(check(d1,d2,v))
 		cout<<"correct!"<<endl;
 	else
-		cout<<"NOT¡@correct!"<<endl;
+		cout<<"NOTï¿½@correct!"<<endl;
 	*/
 	
 	
@@ -247,7 +247,7 @@ int main(){
 	vector<int> d1_v(k,0);
 	vector<int> d2_v(k,0);
 	
-	//random §ä ( v, k ,2 ) DSS
+	//random ï¿½ï¿½ ( v, k ,2 ) DSS
 	
 	int time = 0;
 	do{
@@ -281,7 +281,7 @@ int main(){
 		if(check(d1,d2,v))
 			cout<<"correct!"<<endl;
 		else
-			cout<<"NOT¡@correct!"<<endl;
+			cout<<"NOTï¿½@correct!"<<endl;
 		
 		
 	
@@ -313,14 +313,14 @@ int main(){
 		if(check(d1_v,d2_v,v))
 			cout<<"correct!"<<endl;
 		else
-			cout<<"NOT¡@correct!"<<endl;
+			cout<<"NOTï¿½@correct!"<<endl;
 			
 		time++;
 	}while(!check(d1_v,d2_v,v)&&time<1000);
 	///////////////////////////////////////////////
 	
 	/*
-		vector<int> mp;		//Àx¦s®t­È 
+		vector<int> mp;		//ï¿½xï¿½sï¿½tï¿½ï¿½ 
 	
 		for(int i=0;i<d1.size();i++){
 			for(int j=0;j<d1.size();j++){
@@ -350,7 +350,7 @@ int main(){
 		
 	
 		///////////////////////////////////////
-		vector<int> mp2;		//Àx¦s®t­È 
+		vector<int> mp2;		//ï¿½xï¿½sï¿½tï¿½ï¿½ 
 	
 		for(int i=0;i<d1.size();i++){
 			for(int j=0;j<d1.size();j++){
@@ -406,7 +406,7 @@ int main(){
 		cout<<endl;
 	}
 	
-	//¼g¤JÀÉ®× CSV
+	//ï¿½gï¿½Jï¿½É®ï¿½ CSV
 	fstream file;
 	file.open("DSS.csv");
 	
