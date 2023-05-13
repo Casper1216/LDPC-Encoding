@@ -3,9 +3,10 @@
 #include <fstream>
 #include "Sidon.h"
 #include<time.h>
+
 using namespace std;
 
-int main(){
+int main(int, char**){
 	
 		srand(time(0));
 	// Start Record the time
