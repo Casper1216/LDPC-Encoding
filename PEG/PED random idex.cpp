@@ -205,10 +205,14 @@ int main(){
     time_t  start = clock();
 	
 	//***************************************************************************
-	int dv =4;
-	int n = 43600;
-	int m = 10900;
-
+	int dv ,n,m;
+	
+	cout<<"1dv: ";
+	cin>>dv; 
+	cout<<"Code length: ";
+	cin>>n; 
+	cout<<"number of CN: ";
+	cin>>m; 
 	vector<int> deg(m,0);	//¬ö¿ý CN ªºdegree 
 	vector<vector<int>> col_idex(n);	
 	vector<vector<int>> row_idex(m);
