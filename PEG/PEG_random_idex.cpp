@@ -224,7 +224,7 @@ int main(){
 	// Record the end time
     time_t end = clock();
 	double diff = end - start; // ms
-    cout<<"total: "<<(diff / CLOCKS_PER_SEC)<< "second";
+    cout<<"total: "<<(diff / CLOCKS_PER_SEC)<< "second"<<endl;
 	
 
 	
