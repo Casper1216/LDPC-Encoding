@@ -224,8 +224,8 @@ bool check(vector<int>& d1,vector<int>& d2,int v){
 int main(){
 	
 	srand(time(0));
-	int v=2525;		//	v	>	k*(k-1)
-	int k=17;
+	int v=150;		//	v	>	k*(k-1)
+	int k=8;
 	int a = 7;		//要跟 v 互質 
 
 	/*
@@ -301,7 +301,7 @@ int main(){
 		if(check(d1,d2,v))
 			cout<<"correct!"<<endl;
 		else
-			cout<<"NOT　correct!"<<endl;
+			cout<<"NOT correct!"<<endl;
 		
 		
 	
@@ -400,13 +400,7 @@ int main(){
 	*/
 	
 	
-	
-	
-	
-	
-	
-	
-	
+
 
 	int L = k;
 	int P = v;		// P > 2L*(L-1)
@@ -426,20 +420,39 @@ int main(){
 		cout<<endl;
 	}
 	
-	//寫入檔案 CSV
-	fstream file;
-	file.open("DSS.csv");
+	// //寫入檔案 CSV
+	// fstream file;
+	// file.open("DSS.csv");
 	
-	for(int i=0;i<4;i++){
-		for(int j=0;j<L;j++){
+	// for(int i=0;i<4;i++){
+	// 	for(int j=0;j<L;j++){
 			
-			file<<E[i][j]<<",";
+	// 		file<<E[i][j]<<",";
+	// 	}
+	// 	file<<endl;
+	// }
+	
+	// file.close();
+	
+	//Base maxtrix 寫入檔案 text
+	
+
+	ofstream ofs;
+	ofs.open("DSS Base matrix.txt");
+    if (!ofs.is_open()) {
+        cout << "Failed to open file.\n";
+        return 1; // EXIT_FAILURE
+    }
+	
+	for(int j=0;j<4;j++){
+		
+    	for(int i=0;i<L;i++){
+    		
+    		ofs<<E[i][j]<<" ";
 		}
-		file<<endl;
+		ofs<<"\n";
 	}
-	
-	file.close();
-	
+	ofs.close();
 	
 	
 	

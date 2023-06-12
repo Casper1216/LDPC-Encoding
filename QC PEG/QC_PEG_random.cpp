@@ -430,63 +430,6 @@ int main(){
 	ofs.close();
 	
 	
-	/* 
-	// H 寫入檔案 text
-	ofstream ofs;
-	ofs.open("QC_PEG.txt");
-    if (!ofs.is_open()) {
-        cout << "Failed to open file.\n";
-        return 1; // EXIT_FAILURE
-    }
-    int dc=0;
-	for(int i=0;i<c;i++){
-		if(deg[i]>dc){
-			dc = deg[i];
-		} 
-	}
-    ofs <<n<<" "<<m<< "\n";
-    ofs <<dv<<" "<<dc<<"\n";
-    for(int j=0;j<n;j++)
-    	ofs <<dv<<" ";
-    ofs<<"\n";
-    for(int i=0;i<c;i++){
-    	for(int j=0;j<P;j++)
-    		ofs <<deg[i]<<" ";
-	}
-	ofs<<"\n";
-	//寫入每個 col 為 1 的 row idex 
-	for(int j=0;j<n;j++){
-		int count=0;
-    	for(int i=0;i<m;i++){
-    		if(H[i][j]==1){
-    			ofs<<i+1<<" ";
-    			count++;
-			}
-		}
-		
-		while(count<dv){
-			ofs<<0<<" ";
-    		count++;
-		}
-		ofs<<"\n";
-	}
-	//寫入每個 row 為 1 的 col idex 
-	for(int i=0;i<m;i++){
-		int count=0;
-    	for(int j=0;j<n;j++){
-    		if(H[i][j]==1){
-    			ofs<<j+1<<" ";
-    			count++;
-			}
-		}
-		while(count<dc){
-			ofs<<0<<" ";
-    		count++;
-		}
-		ofs<<"\n";
-	}
 	
-    ofs.close();
-    */
 	return 0;
 }

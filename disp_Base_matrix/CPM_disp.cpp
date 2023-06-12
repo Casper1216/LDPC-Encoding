@@ -1,7 +1,6 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
-
 #include<string.h>
 #include <sstream>
 #include <fstream>
@@ -29,40 +28,55 @@ int main(){
 	int P;
 	cout<<"enter CPM size: "<<endl;
 	cin>>P;
+	int m,n;
+	cout<<"enter number of row: "<<endl;
+	cin>>m;
+	cout<<"enter number of col: "<<endl;
+	cin>>n;
 	
+	//--------------read csv------------------
+	// vector<vector<int>>B;
+	// fstream file;
+	// //file.open("DSS.csv");
+	// //file.open("IRCMS.csv");
+	// //file.open("sidon_M.csv");
+	// file.open("QC_PEG Base matrix.csv");
 	
-	
-	vector<vector<int>> B;
-	
-	//readfile
-	fstream file;
-	//file.open("DSS.csv");
-	//file.open("IRCMS.csv");
-	//file.open("sidon_M.csv");
-	file.open("QC_PEG Base matrix.csv");
-	
-	//讀檔讀到跳行字元
-	int i=0;
-	string line;
+	// //讀檔讀到跳行字元
+	// int i=0;
+	// string line;
+    // while(getline(file,line))
+    // {
+    //     stringstream lineStream(line);
+    //     string cell;
+    //     vector<int> row;
+    //     while(std::getline(lineStream,cell,','))
+    //     {
+    //         row.push_back(atoi(cell.c_str()));	//把string 轉成char* 再轉成 int   
+    //     }
 
-    while(getline(file,line))
-    {
-        stringstream lineStream(line);
-        string cell;
-        vector<int> row;
-        while(std::getline(lineStream,cell,','))
-        {
-            row.push_back(atoi(cell.c_str()));	//把string 轉成char* 再轉成 int   
-        }
+    //     B.push_back(row);
+    // }
+	// file.close();
 
-        B.push_back(row);
+
+
+	//--------------read txt------------------
+	FILE *fp1 = fopen("QC_PEG Base matrix.txt", "r");
+	if (fp1 == NULL) {
+        fprintf(stderr, "fopen() failed.\n");
+        exit(EXIT_FAILURE);
     }
-	file.close();
+
+	vector<vector<int>> B( m,vector<int>(n,0));
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+    		fscanf(fp1,"%d ",&B[i][j]);
+		}
+	}
 	
+	//----------------------------------------
 	
-	
-	int m = B.size();
-	int n = B[0].size();
 	for(int j=0;j<m;j++){
 		for(int k=0;k<n;k++){
 			cout<<B[j][k]<<' ';
