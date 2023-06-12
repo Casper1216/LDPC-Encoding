@@ -30,21 +30,31 @@ void display(vector<vector<int>>& v){
 		
 	}
 }
-
-vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<int>& vis_CN){	
-	//對矩陣 v 的 VN 做 subgraph 展開 找出最遠的 CN candidate 
+void display_B(vector<vector<int>>& v){
+	int m = v.size();
+	for(int i=0;i<m;i++){
+		for(int j=0;j<v[i].size();j++){
+			cout<<v[i][j]-1<<' ';
+		}
+		cout<<endl;
+		
+	}
+}
+vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<int>& vis_CN){
+	//Construct tree with H to find farest children	
 	//且要避開 已有CPM的位置  
 	int m = H.size(),n = H[0].size();
 	
-	unordered_set<int> CN_vis;			//紀錄造訪過的CN 
-	unordered_set<int> VN_vis;			//紀錄造訪過的VN
+	unordered_set<int> CN_vis;			//Record visited CN 
+	unordered_set<int> VN_vis;			//Record visited VN 
 	
-	VN_vis.insert(VN);				//vis 過此VN 
+	VN_vis.insert(VN);					//vis 過此VN 
 	
-	vector<vector<int>> tree_CN;	//存取 tree 每層的 CN 
-	vector<int> L1;
-	
+	vector<vector<int>> tree_CN;		//存取 tree 每層的 CN 
+	vector<int> L1;						//tree 第一層的CN   
 	queue<pair<int,int>>  q;
+
+
 	for(int i=0;i<m;i++){
 		if(H[i][VN]==1){
 			CN_vis.insert(i);		//vis 過此CN 
@@ -108,8 +118,6 @@ vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<in
 	vector<int> cand;
 	int Level = tree_CN.size();
 	if(CN_vis.size()==m){		//若全部CN 都 vis 過 ,回傳最底下的CN  
-		
-		
 		for(auto e:tree_CN[Level-1])
 			cand.push_back(e);
 		
@@ -134,7 +142,7 @@ vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<in
 	if(cand.size()>0)
 		return cand;
 	
-	//回看樹每一層是 否有 可用 idex 
+	//回看tree每一層是否有 可用 idex 
 	for(int i=Level-2;i>=0;i--){
 		vector<int> pre = tree_CN[i];
 		for(int i=0;i<pre.size();i++){
@@ -282,7 +290,6 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 					vector<int> cn_set = BFS(H,t,c,P,k*P,vis_CN);	//找出最底下的 CN set 或沒 vis 到的 CN 
 					
 					//cout<<"cn_set size   "<<cn_set.size()<<endl; 
-					
 					//for(auto e:cn_set)
 						//cout<<e<<' ';
 					//cout<<endl;
@@ -293,31 +300,35 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 					int new_edge;
 					int idex;
 					
-					map<int,vector<int>> mp;
+					map<int,vector<int>> mp;	//將CN idex的 candidate 
+												//分別放到對應的CPM 
+												//key 第幾個CPM , value 放此CPM 中的idex  
 					
 					for(int i=0;i<cn_set.size();i++){
 						idex = cn_set[i]/P;
 						mp[idex].push_back(cn_set[i]%P);
 						if(deg[idex]<low_d){
-							low_d = deg[idex];			//找到最低 degree 的 idex 
+							low_d = deg[idex];				//找到最低 degree 的 idex 
 						}
 					}
 					for(int i=0;i<cn_set.size();i++){
 						idex = cn_set[i]/P;
 						if(deg[idex]==low_d){
-							low_deg_set.push_back(idex);	//放入 最低 degree set
+							low_deg_set.push_back(idex);	//放入lowest degree set
 						}
 					}
-					int new_idex = low_deg_set[rand()%low_deg_set.size()];
+
+
+					int new_idex = low_deg_set[rand()%low_deg_set.size()];	//random select from lowest degree set
 					int size = mp[new_idex].size();
 					
-					int r = mp[new_idex][rand()%size];
+					int r = mp[new_idex][rand()%size];	//r 為選出來的idex
 					//cout<<"q== "<<q<<endl;
 					//cout<<"new_idex: "<<new_idex<<endl;
 					//cout<<"new block idex: "<<r<<endl;
+
 					vector<vector<int>> h(P,vector<int>(P,0));
-					
-					CPM(h,r,P);					//得到CPM 
+					CPM(h,r,P);					//得到CPM h
 					//放入大 H 
 					for(int j=0;j<P;j++){
 						for(int w=0;w<P;w++){
@@ -350,8 +361,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 int main(){
 	
 	srand(time(0));
-	// Start Record the time
-    time_t  start = clock();
+	
 	
 	//***************************************************************************
 	int P ,dv,c,t;
@@ -376,19 +386,24 @@ int main(){
 	
 	vector<vector<int>> B(c,vector<int>(t,0));
 	
+
+	//-----------------Start Record the time---------------------
+    time_t  start = clock();
+
 	vector<vector<int>>H = QCPEG(t,c,P,dv,deg,B);
-	//display(H);
-	display(B);
-	
-	for(auto e:deg)
-		cout<<e<<' ';
-	cout<<endl;
-	// Record the end time
+
+	//-------------------Record the end time---------------------
     time_t end = clock();
 	double diff = end - start; // ms
-    cout<<"total: "<<(diff / CLOCKS_PER_SEC)<< "second";
+
+
+    cout<<"total: "<<(diff / CLOCKS_PER_SEC)<< "second"<<endl;
 	
-	
+	display_B(B);
+	//display(H);
+	// for(auto e:deg)
+	// 	cout<<e<<' ';
+	// cout<<endl;
 	
 	
 	//寫入檔案 CSV
@@ -406,8 +421,6 @@ int main(){
 	
 	
 	//Base maxtrix 寫入檔案 text
-	
-
 	ofstream ofs;
 	ofs.open("QC_PEG Base matrix.txt");
     if (!ofs.is_open()) {
@@ -425,8 +438,6 @@ int main(){
 		
 		ofs<<"\n";
 	}
-	
-	
 	ofs.close();
 	
 	
