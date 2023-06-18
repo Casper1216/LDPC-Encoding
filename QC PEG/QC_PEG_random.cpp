@@ -40,7 +40,7 @@ void display_B(vector<vector<int>>& v){
 		
 	}
 }
-vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<int>& vis_CN){
+vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 	//Construct tree with H to find farest children	
 	//且要避開 已有CPM的位置  
 	int m = H.size(),n = H[0].size();
@@ -287,7 +287,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 				}
 				else{
 					
-					vector<int> cn_set = BFS(H,t,c,P,k*P,vis_CN);	//找出最底下的 CN set 或沒 vis 到的 CN 
+					vector<int> cn_set = BFS(H,P,k*P,vis_CN);	//找出最底下的 CN set 或沒 vis 到的 CN 
 					
 					//cout<<"cn_set size   "<<cn_set.size()<<endl; 
 					//for(auto e:cn_set)

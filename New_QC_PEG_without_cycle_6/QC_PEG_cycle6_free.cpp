@@ -40,7 +40,79 @@ void display_B(vector<vector<int>>& v){
 		
 	}
 }
-vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<int>& vis_CN){
+void cycle6_DFS(vector<int>& equ,vector<vector<int>>& B,int x,int y,int P,
+int start_x,int start_y,int dir,vector<vector<int>>& vis,bool& ans){
+    //dir = 0 represent go up or down
+    //dir = 1 represent go left or right
+	//start_x start_y 為Base matrix 的出發點
+    //cout<<x<<' '<<y<<endl;
+    if(B[x][y]==0)
+        return ;
+    if(equ.size()==6&&(x==start_x&&y==start_y)){
+        int sum = ((equ[0]-equ[1]) +(equ[2]-equ[3])+(equ[4]-equ[5]))%P;
+        cout<<"Sum: "<<sum<<endl;
+        // cout<<"equ: "<<endl;
+        // for(auto e:equ){
+        //     cout<<e<<" ";
+        // }
+        // cout<<endl;
+        if(sum==0){
+            ans =true;
+        }
+        return ;
+    }
+    else if(equ.size()>=6||vis[x][y]==1||ans)
+        return ;
+    
+    int c = B.size();
+    
+    
+    vis[x][y]=1;
+    equ.push_back(B[x][y]);
+    //cout<<"Su "<<x<<' '<<y<<" equ size: "<<equ.size()<<endl;
+    
+    if(dir==0){
+        for(int i=0;i<c;i++){
+            if(i!=x){
+                cycle6_DFS(equ,B,i,y,P,start_x,start_y,1,vis,ans);
+                
+            }
+                
+        }
+    }
+    else if(dir==1){
+        for(int j=0;j<=start_y;j++){
+            if(j!=y){
+            cycle6_DFS(equ,B,x,j,P,start_x,start_y,0,vis,ans);
+            
+            }
+                
+        }
+    }
+    vis[x][y]=0;
+    equ.pop_back();
+}
+bool iscycle6_exist(vector<vector<int>>& B,int x,int y,int P){
+	//因為B的元素為1~P  
+    //if(B[x][y]==0)
+        //跳過
+    int c = B.size();
+    
+    int dir = 0;
+    vector<int> equ;
+    vector<vector<int>> cycle6;
+    vector<vector<int>> vis(c,vector<int>(y,0));
+    bool ans = false;
+    cycle6_DFS(equ,B,x,y,P,x,y,0,vis,ans);
+    //cout<<"Number of cycle 6: "<<cycle6.size()<<endl;
+    
+    
+
+	return ans;
+}
+
+
+vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 	//Construct tree with H to find farest children	
 	//且要避開 已有CPM的位置  
 	int m = H.size(),n = H[0].size();
@@ -160,15 +232,213 @@ vector<int> BFS(vector<vector<int>>& H,int t,int c,int P,int VN,unordered_set<in
 	
 }
 
+void To_find_CPM(vector<vector<int>>& H,int P,int k,int q,int k_des,int q_des,unordered_set<int>& vis_CN,vector<vector<int>>& B
+,vector<int>& deg,vector<vector<vector<int>>>& LOW_DEG,vector<vector<int>>& construct_order){
+	
+	//目前要建立第 k 個col ,第 q 個CPM
+	//要建立至第 k_des 個col ,第 q_des 個CPM
 
+	//vector<vector<int>> construct_order //儲存建立Base 的順序
+	//vector<vector<vector<int>>> LOW_DEG //儲存每個CPM的low_deg_set
+
+	int c = B.size(),t=B[0].size();
+	int VN = k*P;
+
+	if(q==0){
+			//重新選一個 初始的 CPM
+			int pre_idex = construct_order[k][q] ;	//上一個建立的CPM idex
+			deg[pre_idex]--;							//degree -1
+			vis_CN.erase(pre_idex);						//刪除上一個建的idex
+			B[pre_idex][k]=0;
+			//------------------------
+			//通常每個CN都go through 過，從所有CN(除了pre_idex 的 CPM
+			int new_idex ;
+			int r = rand()%P;
+			do{
+				new_idex = rand()%c;
+
+			}while(new_idex==pre_idex);
+
+				
+			vector<vector<int>> h(P,vector<int>(P,0));
+			CPM(h,r,P);					//得到CPM 
+			//放入大 H 
+			for(int j=0;j<P;j++){
+				for(int w=0;w<P;w++){
+					if(h[j][w]==1)
+						H[new_idex*P+j][k*P+w]=1;
+				}
+			}
+			
+			B[new_idex][k] = (P-r)%P + 1;
+			deg[new_idex]++;
+			vis_CN.insert(new_idex);	//對此block 做標記 已有 CPM 
+			construct_order[k][q] = new_idex;
+			return ;
+			
+		}
+	//---------------------------------------------------
+	vector<int> cn_set = BFS(H,P,k*P,vis_CN);	//找出最底下的 CN set 或沒 vis 到的 CN 
+						
+	//cout<<"cn_set size   "<<cn_set.size()<<endl; 
+	//for(auto e:cn_set)
+		//cout<<e<<' ';
+	//cout<<endl;
+	
+	
+	vector<int> low_deg_set; 
+	int low_d = B[0].size();				//dv = t
+	int new_edge;
+	int idex;
+	
+	map<int,vector<int>> mp;	//將CN idex的 candidate 
+								//分別放到對應的CPM 
+								//key 第幾個CPM , value 放此CPM 中的idex  
+	
+	for(int i=0;i<cn_set.size();i++){
+		idex = cn_set[i]/P;
+		mp[idex].push_back(cn_set[i]%P);
+		if(deg[idex]<low_d){
+			low_d = deg[idex];				//找到最低 degree 的 CPM idex 
+		}
+	}
+	for(int i=0;i<cn_set.size();i++){
+		idex = cn_set[i]/P;
+		if(deg[idex]==low_d){
+			low_deg_set.push_back(idex);	//放入lowest degree set
+		}
+	}
+	vector<int> cand_list;
+	for(auto e:mp){
+		for(int i=0;i<e.second.size();i++){
+			cand_list.push_back(P*e.first+e.second[i]);
+		}
+	}
+	// cout<<"cand_list size   "<<cand_list.size()<<endl; 
+	// for(auto e:cand_list)
+	// 	cout<<e<<' ';
+	// cout<<endl;
+
+	int new_idex ;
+	int Row_idex;
+	int r;
+	
+	for(int i=0;i<cand_list.size();i++){
+		Row_idex = cand_list[rand()%cand_list.size()];
+		new_idex = Row_idex/P;
+		r = Row_idex%P;		// r 為從CPM中選出來的 idex
+
+		B[new_idex][k] = (P-r)%P+1; 	//shift size 放入 Base matrix 
+
+		if(iscycle6_exist(B,new_idex,k,P)){	//由B[new_idex][k]出發檢查cycle 6
+			for(int j=0;j<cand_list.size();j++){
+				if(cand_list[j]==Row_idex){
+					cand_list.erase(cand_list.begin()+j);
+				}
+			}
+		}
+		else{
+			break;
+		}	
+	
+	}
+	if(!cand_list.empty()){
+		LOW_DEG[k][q] = cand_list;		//update LOW_DEG
+		B[new_idex][k] = (P-r)%P+1; 	//shift size 放入 Base matrix 
+		construct_order[k][q] = new_idex;
+
+
+		//上面找到一個要加入CPM idex : r					
+	
+		vector<vector<int>> h(P,vector<int>(P,0));
+		CPM(h,r,P);					//得到CPM h
+		//放入大 H 
+		for(int j=0;j<P;j++){
+			for(int w=0;w<P;w++){
+				if(h[j][w]==1)
+					H[new_idex*P+j][k*P+w]=1;
+			}
+		}
+				
+		deg[new_idex]++;
+		vis_CN.insert(new_idex);	//對此block 做標記 已有 CPM
+	}
+	else{
+		//candiate 都用完且還有cycle 6
+		// 回到 q-1個CPM
+		if(q-1>0){
+			//-----------------------------回溯-------------------------------------
+			int pre_idex = construct_order[k][q-1] ;	//上一個建立的CPM idex
+			deg[pre_idex]--;							//degree -1
+			vis_CN.erase(pre_idex);						//刪除上一個建的idex
+			B[pre_idex][k]=0;
+			//CPM在H的位置全歸0
+			for(int j=0;j<P;j++){
+				for(int w=0;w<P;w++){
+					H[pre_idex*P+j][k*P+w]=0;
+				}
+			}
+
+			//----------------------------------------------------------------------
+			To_find_CPM(H,P,k,q-1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion to find another candidates from previous CPM
+		}
+		else{
+			//go to previous col
+			if(k-1==0)
+				return ;
+			q = t-1;
+			int pre_k = k-1;
+			//-----------------------------回溯-------------------------------------
+			int pre_idex = construct_order[pre_k][q] ;	//上一個建立的CPM idex
+			deg[pre_idex]--;							//degree -1
+			vis_CN.erase(pre_idex);						//刪除上一個建的idex
+			B[pre_idex][pre_k]=0;
+			//CPM在H的位置全歸0
+			for(int j=0;j<P;j++){
+				for(int w=0;w<P;w++){
+					H[pre_idex*P+j][pre_k*P+w]=0;
+				}
+			}
+
+			//----------------------------------------------------------------------
+			To_find_CPM(H,P,pre_k,q,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion to find another candidates from previous CPM
+
+		}
+
+	}
+
+	//--------------------------------------------------------------------
+
+	//因為回溯 要把尚未建立完的建立好 bottom up
+	if(k<k_des){
+		for(int j=k;j<k_des;j++){
+			for(int i=q;i<q_des;i++){
+				To_find_CPM(H,P,j,i,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);
+			}
+		}
+		
+	}
+	if(q<q_des){
+		for(int i=q;i<q_des;i++){
+			To_find_CPM(H,P,k,i,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);
+		}
+	}	
+	
+	
+}
 
 vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vector<int>>& B){
+	//number of row : c
+	//number of col : t
 	int m = c*P;
 	int n = t*P;
 	vector<vector<int>> H(m,vector<int>(n,0));
 	unordered_set<int> E;			//紀錄前面VN 所連的CN 之聯集 
-	
-	// 第一組 VN
+	vector<vector<int>> construct_order(t,vector<int>(dv,-1));	//儲存建立Base 的順序 
+																//construct_order[k][q] 代表第k個col 第q個建立的CPM idex
+	vector<vector<vector<int>>> LOW_DEG(t,vector<vector<int>>(dv));	//儲存每個CPM的low_deg_set
+																	//LOW_DEG[k][q] 代表第k個col 第q個建立的candidate list
+	//Base matrix first col
 	cout<<"CPM VN block: "<<0<<endl;
 	for(int i=0;i<dv;i++){
 		int r = rand()%c;
@@ -200,7 +470,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 	} 
 	
 	
-	
+	//Base matrix (2 ~ t) col
 	for(int k=1;k<t;k++){
 		cout<<"CPM VN block: "<<k<<endl;
 		
@@ -245,7 +515,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 				
 				vis_CN.insert(new_edge);	//對此block 做標記 已有 CPM 
 				
-				
+				construct_order[k][q] = new_edge;
 				//cout<<"q== 0 new_edge: "<<new_edge<<' '<<"shift: "<<r<<endl;
 				
 			}
@@ -280,67 +550,22 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 							
 							vis_CN.insert(new_edge);	//對此block 做標記 已有 CPM
 							E.insert(new_edge);
+							construct_order[k][q] = new_edge;
 							//cout<<"q== "<<q<<" new_edge: "<<new_edge<<' '<<"shift: "<<r<<endl;
 							break;			//找到就停止 只增加一條edge 
 						}
 					}
 				}
 				else{
-					
-					vector<int> cn_set = BFS(H,t,c,P,k*P,vis_CN);	//找出最底下的 CN set 或沒 vis 到的 CN 
-					
-					//cout<<"cn_set size   "<<cn_set.size()<<endl; 
-					//for(auto e:cn_set)
-						//cout<<e<<' ';
-					//cout<<endl;
-					
-					
-					vector<int> low_deg_set; 
-					int low_d = t;
-					int new_edge;
-					int idex;
-					
-					map<int,vector<int>> mp;	//將CN idex的 candidate 
-												//分別放到對應的CPM 
-												//key 第幾個CPM , value 放此CPM 中的idex  
-					
-					for(int i=0;i<cn_set.size();i++){
-						idex = cn_set[i]/P;
-						mp[idex].push_back(cn_set[i]%P);
-						if(deg[idex]<low_d){
-							low_d = deg[idex];				//找到最低 degree 的 idex 
-						}
-					}
-					for(int i=0;i<cn_set.size();i++){
-						idex = cn_set[i]/P;
-						if(deg[idex]==low_d){
-							low_deg_set.push_back(idex);	//放入lowest degree set
-						}
-					}
+					//------------------------------------------------------------
 
+					//add new CPM and ensure cycle 6 free
+					cout<<"To find"<<endl;
+					//下面要建立第k col 的第q個 CPM
 
-					int new_idex = low_deg_set[rand()%low_deg_set.size()];	//random select from lowest degree set
-					int size = mp[new_idex].size();
-					
-					int r = mp[new_idex][rand()%size];	//r 為選出來的idex
-					//cout<<"q== "<<q<<endl;
-					//cout<<"new_idex: "<<new_idex<<endl;
-					//cout<<"new block idex: "<<r<<endl;
+					To_find_CPM(H,P,k,q,k,q,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion function
 
-					vector<vector<int>> h(P,vector<int>(P,0));
-					CPM(h,r,P);					//得到CPM h
-					//放入大 H 
-					for(int j=0;j<P;j++){
-						for(int w=0;w<P;w++){
-							if(h[j][w]==1)
-								H[new_idex*P+j][k*P+w]=1;
-						}
-					}
-							
-					B[new_idex][k] = (P-r)%P+1;
-								
-					deg[new_idex]++;
-					vis_CN.insert(new_idex);	//對此block 做標記 已有 CPM
+					//---------------------------------------------------------
 					
 					
 				}
@@ -420,25 +645,25 @@ int main(){
 	// file.close();
 	
 	
-	// //Base maxtrix 寫入檔案 text
-	// ofstream ofs;
-	// ofs.open("QC_PEG Base matrix.txt");
-    // if (!ofs.is_open()) {
-    //     cout << "Failed to open file.\n";
-    //     return 1; // EXIT_FAILURE
-    // }
+	//Base maxtrix 寫入檔案 text
+	ofstream ofs;
+	ofs.open("QC_PEG Base matrix.txt");
+	if (!ofs.is_open()) {
+		cout << "Failed to open file.\n";
+		return 1; // EXIT_FAILURE
+	}
 	
-	// for(int i=0;i<c;i++){
+	for(int i=0;i<c;i++){
 		
-    // 	for(int j=0;j<t;j++){
-    		
-    // 		ofs<<B[i][j]-1<<" ";
-    			
-	// 	}
+		for(int j=0;j<t;j++){
+			
+			ofs<<B[i][j]-1<<" ";
+				
+		}
 		
-	// 	ofs<<"\n";
-	// }
-	// ofs.close();
+		ofs<<"\n";
+	}
+	ofs.close();
 	
 	
 	
