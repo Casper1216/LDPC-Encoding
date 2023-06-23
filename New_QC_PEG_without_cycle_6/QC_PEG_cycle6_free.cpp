@@ -1,4 +1,6 @@
 #include<iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include<queue>
 #include<algorithm>
 #include<vector>
@@ -8,8 +10,10 @@
 #include<unordered_set>
 #include<time.h>
 #include <fstream>
+#include "is_cycle6_exist.cpp"
 
 using namespace std;
+using std::cout;
 
 void CPM(vector<vector<int>>& h,int shift,int P){	// 1 ªº¦ì¸m¦b²Ä n ­Ó ¨D¥X¬Û¹ïÀ³ªº CPM 
 	
@@ -20,99 +24,97 @@ void CPM(vector<vector<int>>& h,int shift,int P){	// 1 ªº¦ì¸m¦b²Ä n ­Ó ¨D¥X¬Û¹ïÀ
 	}
 } 
 
-void display(vector<vector<int>>& v){
-	int m = v.size();
-	for(int i=0;i<m;i++){
-		for(int j=0;j<v[i].size();j++){
-			cout<<v[i][j]<<' ';
-		}
-		cout<<endl;
+// void display(vector<vector<int>>& v){
+// 	int m = v.size();
+// 	for(int i=0;i<m;i++){
+// 		for(int j=0;j<v[i].size();j++){
+// 			cout<<v[i][j]<<' ';
+// 		}
+// 		cout<<endl;
 		
-	}
-}
-void display_B(vector<vector<int>>& v){
-	int m = v.size();
-	for(int i=0;i<m;i++){
-		for(int j=0;j<v[i].size();j++){
-			cout<<v[i][j]-1<<' ';
-		}
-		cout<<endl;
+// 	}
+// }
+// void display_B(vector<vector<int>>& v){
+// 	int m = v.size();
+// 	for(int i=0;i<m;i++){
+// 		for(int j=0;j<v[i].size();j++){
+// 			cout<<v[i][j]-1<<' ';
+// 		}
+// 		cout<<endl;
 		
-	}
-}
-void cycle6_DFS(vector<int>& equ,vector<vector<int>>& B,int x,int y,int P,
-int start_x,int start_y,int dir,vector<vector<int>>& vis,bool& ans){
-    //dir = 0 represent go up or down
-    //dir = 1 represent go left or right
-	//start_x start_y ¬°Base matrix ªº¥XµoÂI
-    //cout<<x<<' '<<y<<endl;
-    if(B[x][y]==0)
-        return ;
-    if(equ.size()==6&&(x==start_x&&y==start_y)){
-        int sum = ((equ[0]-equ[1]) +(equ[2]-equ[3])+(equ[4]-equ[5]))%P;
-        cout<<"Sum: "<<sum<<endl;
-        // cout<<"equ: "<<endl;
-        // for(auto e:equ){
-        //     cout<<e<<" ";
-        // }
-        // cout<<endl;
-        if(sum==0){
-            ans =true;
-        }
-        return ;
-    }
-    else if(equ.size()>=6||vis[x][y]==1||ans)
-        return ;
+// 	}
+// }
+// void cycle6_DFS(vector<int>& equ,vector<vector<int>>& B,int x,int y,int P,
+// int start_x,int start_y,int dir,vector<vector<int>>& vis,bool& ans){
+//     //dir = 0 represent go up or down
+//     //dir = 1 represent go left or right
+// 	//start_x start_y ¬°Base matrix ªº¥XµoÂI
+//     //cout<<x<<' '<<y<<endl;
+//     if(B[x][y]==0)
+//         return ;
+//     if(equ.size()==6 && (x==start_x&&y==start_y)){
+//         int sum = ((equ[0]-equ[1]) +(equ[2]-equ[3])+(equ[4]-equ[5]))%P;
+//         // cout<<"Sum: "<<sum<<endl;
+//         // cout<<"equ: "<<endl;
+//         // for(auto e:equ){
+//         //     cout<<e<<" ";
+//         // }
+//         // cout<<endl;
+//         if(sum==0){
+//             ans =true;
+//         }
+//         return ;
+//     }
+//     else if(equ.size()>=6||vis[x][y]==1||ans)
+//         return ;
     
-    int c = B.size();
+//     int c = B.size();
     
     
-    vis[x][y]=1;
-    equ.push_back(B[x][y]);
-    //cout<<"Su "<<x<<' '<<y<<" equ size: "<<equ.size()<<endl;
+//     vis[x][y]=1;
+//     equ.push_back(B[x][y]);
+//     //cout<<"Su "<<x<<' '<<y<<" equ size: "<<equ.size()<<endl;
     
-    if(dir==0){
-        for(int i=0;i<c;i++){
-            if(i!=x){
-                cycle6_DFS(equ,B,i,y,P,start_x,start_y,1,vis,ans);
+//     if(dir==0){
+//         for(int i=0;i<c;i++){
+//             if(i!=x){
+//                 cycle6_DFS(equ,B,i,y,P,start_x,start_y,1,vis,ans);
                 
-            }
+//             }
                 
-        }
-    }
-    else if(dir==1){
-        for(int j=0;j<=start_y;j++){
-            if(j!=y){
-            cycle6_DFS(equ,B,x,j,P,start_x,start_y,0,vis,ans);
+//         }
+//     }
+//     else if(dir==1){
+//         for(int j=0;j<=start_y;j++){
+//             if(j!=y){
+//             	cycle6_DFS(equ,B,x,j,P,start_x,start_y,0,vis,ans);
             
-            }
-                
-        }
-    }
-    vis[x][y]=0;
-    equ.pop_back();
-}
-bool iscycle6_exist(vector<vector<int>>& B,int x,int y,int P){
-	//¦]¬°Bªº¤¸¯À¬°1~P  
-    //if(B[x][y]==0)
-        //¸õ¹L
-    int c = B.size();
+//             }   
+//         }
+//     }
+//     vis[x][y]=0;
+//     equ.pop_back();
+// }
+// bool iscycle6_exist(vector<vector<int>>& B,int x,int y,int P){
+// 	//¦]¬°Bªº¤¸¯À¬°1~P  
+//     //if(B[x][y]==0)
+//         //¸õ¹L
+//     int c = B.size();
     
-    int dir = 0;
-    vector<int> equ;
-    vector<vector<int>> cycle6;
-    vector<vector<int>> vis(c,vector<int>(y,0));
-    bool ans = false;
-    cycle6_DFS(equ,B,x,y,P,x,y,0,vis,ans);
-    //cout<<"Number of cycle 6: "<<cycle6.size()<<endl;
+//     int dir = 0;
+//     vector<int> equ;
+//     
+//     vector<vector<int>> vis(c,vector<int>(y,0));
+//     bool ans = false;
+//     cycle6_DFS(equ,B,x,y,P,x,y,0,vis,ans);
     
     
+    
+// 	return ans;
+// }
 
-	return ans;
-}
 
-
-vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
+vector<int> BFS(vector<vector<int>>& H,int P,int VN,int k,vector<unordered_set<int>>& vis_CN){
 	//Construct tree with H to find farest children	
 	//¥B­nÁ×¶} ¤w¦³CPMªº¦ì¸m  
 	int m = H.size(),n = H[0].size();
@@ -164,7 +166,7 @@ vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 					}
 				}
 			}
-			else{
+			else{			// go through row
 				
 				for(int i=0;i<m;i++){
 					
@@ -205,7 +207,7 @@ vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 	}
 	
 	for(int i=0;i<cand.size();i++){
-		if(vis_CN.count(cand[i]/P)){
+		if(vis_CN[k].count(cand[i]/P)){
 			cand.erase(cand.begin()+i);
 			i--;
 		}
@@ -218,7 +220,7 @@ vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 	for(int i=Level-2;i>=0;i--){
 		vector<int> pre = tree_CN[i];
 		for(int i=0;i<pre.size();i++){
-			if(vis_CN.count(pre[i]/P)){
+			if(vis_CN[k].count(pre[i]/P)){
 				pre.erase(pre.begin()+i);
 				i--;
 			}
@@ -227,131 +229,47 @@ vector<int> BFS(vector<vector<int>>& H,int P,int VN,unordered_set<int>& vis_CN){
 			return pre;
 	}
 	
+
+	
 	return {};
 		
 	
 }
 
-void To_find_CPM(vector<vector<int>>& H,int P,int k,int q,int k_des,int q_des,unordered_set<int>& vis_CN,vector<vector<int>>& B
-,vector<int>& deg,vector<vector<vector<int>>>& LOW_DEG,vector<vector<int>>& construct_order){
-	
+void To_find_CPM(vector<vector<int>>& H,int P,int k,int q,int k_des,int q_des,vector<unordered_set<int>>& vis_CN,vector<vector<int>>& B
+,vector<int>& deg,vector<vector<vector<int>>>& LOW_DEG,vector<vector<int>>& construct_order,bool backsignal){
+	if(vis_CN[k].size()>q)
+		return;
 	//¥Ø«e­n«Ø¥ß²Ä k ­Ócol ,²Ä q ­ÓCPM
 	//­n«Ø¥ß¦Ü²Ä k_des ­Ócol ,²Ä q_des ­ÓCPM
 
 	//vector<vector<int>> construct_order //Àx¦s«Ø¥ßBase ªº¶¶§Ç
 	//vector<vector<vector<int>>> LOW_DEG //Àx¦s¨C­ÓCPMªºlow_deg_set
 
+	cout<<"Build VN: "<<k<<", qth col: "<<q<<endl;
+	cout<<"vis_CN: "<<vis_CN[k].size()<<endl;
+
 	int c = B.size(),t=B[0].size();
 	int VN = k*P;
 
 	if(q==0){
-			//­«·s¿ï¤@­Ó ªì©lªº CPM
-			int pre_idex = construct_order[k][q] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
-			deg[pre_idex]--;							//degree -1
-			vis_CN.erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
-			B[pre_idex][k]=0;
-			//------------------------
-			//³q±`¨C­ÓCN³£go through ¹L¡A±q©Ò¦³CN(°£¤Fpre_idex ªº CPM
-			int new_idex ;
-			int r = rand()%P;
-			do{
-				new_idex = rand()%c;
+		//­«·s¿ï¤@­Ó ªì©lªº CPM
+		int pre_idex = construct_order[k][q] ;		//¤W¤@­Ó«Ø¥ßªºCPM idex
+		deg[pre_idex]--;							//degree -1
+		vis_CN[k].erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
+		B[pre_idex][k]=0;
+		//------------------------
+		//³q±`¨C­ÓCN³£go through ¹L¡A±q©Ò¦³CN(°£¤Fpre_idex ªº CPM
+		int new_idex ;
+		int r = rand()%P;
+		do{
+			new_idex = rand()%c;
 
-			}while(new_idex==pre_idex);
+		}while(new_idex==pre_idex);
 
-				
-			vector<vector<int>> h(P,vector<int>(P,0));
-			CPM(h,r,P);					//±o¨ìCPM 
-			//©ñ¤J¤j H 
-			for(int j=0;j<P;j++){
-				for(int w=0;w<P;w++){
-					if(h[j][w]==1)
-						H[new_idex*P+j][k*P+w]=1;
-				}
-			}
 			
-			B[new_idex][k] = (P-r)%P + 1;
-			deg[new_idex]++;
-			vis_CN.insert(new_idex);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM 
-			construct_order[k][q] = new_idex;
-			return ;
-			
-		}
-	//---------------------------------------------------
-	vector<int> cn_set = BFS(H,P,k*P,vis_CN);	//§ä¥X³Ì©³¤Uªº CN set ©Î¨S vis ¨ìªº CN 
-						
-	//cout<<"cn_set size   "<<cn_set.size()<<endl; 
-	//for(auto e:cn_set)
-		//cout<<e<<' ';
-	//cout<<endl;
-	
-	
-	vector<int> low_deg_set; 
-	int low_d = B[0].size();				//dv = t
-	int new_edge;
-	int idex;
-	
-	map<int,vector<int>> mp;	//±NCN idexªº candidate 
-								//¤À§O©ñ¨ì¹ïÀ³ªºCPM 
-								//key ²Ä´X­ÓCPM , value ©ñ¦¹CPM ¤¤ªºidex  
-	
-	for(int i=0;i<cn_set.size();i++){
-		idex = cn_set[i]/P;
-		mp[idex].push_back(cn_set[i]%P);
-		if(deg[idex]<low_d){
-			low_d = deg[idex];				//§ä¨ì³Ì§C degree ªº CPM idex 
-		}
-	}
-	for(int i=0;i<cn_set.size();i++){
-		idex = cn_set[i]/P;
-		if(deg[idex]==low_d){
-			low_deg_set.push_back(idex);	//©ñ¤Jlowest degree set
-		}
-	}
-	vector<int> cand_list;
-	for(auto e:mp){
-		for(int i=0;i<e.second.size();i++){
-			cand_list.push_back(P*e.first+e.second[i]);
-		}
-	}
-	// cout<<"cand_list size   "<<cand_list.size()<<endl; 
-	// for(auto e:cand_list)
-	// 	cout<<e<<' ';
-	// cout<<endl;
-
-	int new_idex ;
-	int Row_idex;
-	int r;
-	
-	for(int i=0;i<cand_list.size();i++){
-		Row_idex = cand_list[rand()%cand_list.size()];
-		new_idex = Row_idex/P;
-		r = Row_idex%P;		// r ¬°±qCPM¤¤¿ï¥X¨Óªº idex
-
-		B[new_idex][k] = (P-r)%P+1; 	//shift size ©ñ¤J Base matrix 
-
-		if(iscycle6_exist(B,new_idex,k,P)){	//¥ÑB[new_idex][k]¥XµoÀË¬dcycle 6
-			for(int j=0;j<cand_list.size();j++){
-				if(cand_list[j]==Row_idex){
-					cand_list.erase(cand_list.begin()+j);
-				}
-			}
-		}
-		else{
-			break;
-		}	
-	
-	}
-	if(!cand_list.empty()){
-		LOW_DEG[k][q] = cand_list;		//update LOW_DEG
-		B[new_idex][k] = (P-r)%P+1; 	//shift size ©ñ¤J Base matrix 
-		construct_order[k][q] = new_idex;
-
-
-		//¤W­±§ä¨ì¤@­Ó­n¥[¤JCPM idex : r					
-	
 		vector<vector<int>> h(P,vector<int>(P,0));
-		CPM(h,r,P);					//±o¨ìCPM h
+		CPM(h,r,P);					//±o¨ìCPM 
 		//©ñ¤J¤j H 
 		for(int j=0;j<P;j++){
 			for(int w=0;w<P;w++){
@@ -359,69 +277,250 @@ void To_find_CPM(vector<vector<int>>& H,int P,int k,int q,int k_des,int q_des,un
 					H[new_idex*P+j][k*P+w]=1;
 			}
 		}
-				
+		
+		B[new_idex][k] = (P-r)%P + 1;
 		deg[new_idex]++;
-		vis_CN.insert(new_idex);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM
+		vis_CN[k].insert(new_idex);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM 
+		construct_order[k][q] = new_idex;
+		return ;
+			
 	}
-	else{
-		//candiate ³£¥Î§¹¥BÁÙ¦³cycle 6
-		// ¦^¨ì q-1­ÓCPM
-		if(q-1>0){
-			//-----------------------------¦^·¹-------------------------------------
-			int pre_idex = construct_order[k][q-1] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
-			deg[pre_idex]--;							//degree -1
-			vis_CN.erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
-			B[pre_idex][k]=0;
-			//CPM¦bHªº¦ì¸m¥þÂk0
-			for(int j=0;j<P;j++){
-				for(int w=0;w<P;w++){
-					H[pre_idex*P+j][k*P+w]=0;
+		
+	
+	
+	//---------------------------------------------------
+	cout<<"LOW_DEG size: "<<LOW_DEG[k][q].size()<<endl;
+
+	if(backsignal&&LOW_DEG[k][q].size()>1){		//backtracking ­«¿ïcandidate
+		
+		//§ä¥X·sªºcandidates
+		
+		int Row_idex = LOW_DEG[k][q][rand()%LOW_DEG[k][q].size()];
+		int new_idex = Row_idex/P;
+		int r = Row_idex%P;		// r ¬°±qCPM¤¤¿ï¥X¨Óªº idex
+
+
+		B[new_idex][k] = (P-r)%P+1; 	//shift size ©ñ¤J Base matrix 
+		construct_order[k][q] = new_idex;
+		deg[new_idex]++;
+		vis_CN[k].insert(new_idex);	//¹ï¦¹¦ak­Ó col ªº block °µ¼Ð°O ¤w¦³ CPM
+
+		vector<vector<int>> h(P,vector<int>(P,0));
+		CPM(h,r,P);					//±o¨ìCPM h
+		//©ñ¤J¤j H 
+		for(int j=0;j<P;j++){
+			for(int w=0;w<P;w++){
+				if(h[j][w]==1)
+					H[new_idex*P+j][k*P+w]=1;
+				else{
+					H[new_idex*P+j][k*P+w]=0;
 				}
-			}
-
-			//----------------------------------------------------------------------
-			To_find_CPM(H,P,k,q-1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion to find another candidates from previous CPM
-		}
-		else{
-			//go to previous col
-			if(k-1==0)
-				return ;
-			q = t-1;
-			int pre_k = k-1;
-			//-----------------------------¦^·¹-------------------------------------
-			int pre_idex = construct_order[pre_k][q] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
-			deg[pre_idex]--;							//degree -1
-			vis_CN.erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
-			B[pre_idex][pre_k]=0;
-			//CPM¦bHªº¦ì¸m¥þÂk0
-			for(int j=0;j<P;j++){
-				for(int w=0;w<P;w++){
-					H[pre_idex*P+j][pre_k*P+w]=0;
-				}
-			}
-
-			//----------------------------------------------------------------------
-			To_find_CPM(H,P,pre_k,q,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion to find another candidates from previous CPM
-
-		}
-
-	}
-
-	//--------------------------------------------------------------------
-
-	//¦]¬°¦^·¹ ­n§â©|¥¼«Ø¥ß§¹ªº«Ø¥ß¦n bottom up
-	if(k<k_des){
-		for(int j=k;j<k_des;j++){
-			for(int i=q;i<q_des;i++){
-				To_find_CPM(H,P,j,i,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);
 			}
 		}
 		
+		
 	}
-	if(q<q_des){
-		for(int i=q;i<q_des;i++){
-			To_find_CPM(H,P,k,i,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order);
+	else if(backsignal&&LOW_DEG[k][q].size()==1){
+		cout<<"HIII--------"<<endl;
+		int pre_idex = construct_order[k][q-1] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
+		construct_order[k][q-1] = -1;
+		deg[pre_idex]--;							//degree -1
+		vis_CN[k].erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
+		B[pre_idex][k]=0;
+		//CPM¦bHªº¦ì¸m¥þÂk0
+		for(int j=0;j<P;j++){
+			for(int w=0;w<P;w++){
+				H[pre_idex*P+j][k*P+w]=0;
+			}
 		}
+		To_find_CPM(H,P,k,q-1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,1);
+	}
+	else{
+		vector<int> cn_set = BFS(H,P,k*P,k,vis_CN);	//§ä¥X³Ì©³¤Uªº CN set ©Î¨S vis ¨ìªº CN 
+		if(cn_set.empty()){
+			cout<<"-----------No candidates--------"<<endl;
+			display(B);
+		}					
+		//cout<<"cn_set size   "<<cn_set.size()<<endl; 
+		//for(auto e:cn_set)
+			//cout<<e<<' ';
+		//cout<<endl;
+		
+		
+		unordered_set<int> low_deg_set; 
+		int low_d = B[0].size();				//dv = t
+		int idex;
+		
+		map<int,vector<int>> mp;	//±NCN idexªº candidate 
+									//¤À§O©ñ¨ì¹ïÀ³ªºCPM 
+									//key ²Ä´X­ÓCPM , value ©ñ¦¹CPM ¤¤ªºidex  
+		
+		for(int i=0;i<cn_set.size();i++){
+			idex = cn_set[i]/P;
+			mp[idex].push_back(cn_set[i]%P);
+			if(deg[idex]<low_d){
+				low_d = deg[idex];				//§ä¨ì³Ì§C degree ªº CPM idex 
+			}
+		}
+		
+		for(int i=0;i<cn_set.size();i++){
+			idex = cn_set[i]/P;
+			if(deg[idex]==low_d){
+				low_deg_set.insert(idex);	//©ñ¤Jlowest degree set
+			}
+		}
+		
+		vector<int> cand_list;					//degree ³Ì§Cªº H_row_idex
+		
+		for(auto e:low_deg_set){
+			for(int j=0;j<mp[e].size();j++){
+				idex = e;
+				int row_idex = mp[e][j];
+				cand_list.push_back(idex*P + row_idex);
+			}
+				
+		}
+		
+		cout<<"Before cand_list size  : "<<cand_list.size()<<endl; 
+		
+		int new_idex ;
+		int Row_idex;
+		int r;
+		//²¾°£ candiates¤¤ ¦³cycle 6ªº
+		for(int i=0;i<cand_list.size();i++){
+			Row_idex = cand_list[i];
+			new_idex = Row_idex/P;
+			r = Row_idex%P;		// r ¬°±qCPM¤¤¿ï¥X¨Óªº idex
+
+			B[new_idex][k] = (P-r)%P+1; 	//shift size ©ñ¤J Base matrix 
+
+			
+			if(iscycle6_exist(B,new_idex,k,P)){	  //¥Ñ B[new_idex][k]¥XµoÀË¬d cycle 6
+				
+				//cout<<"Have cycle 6"<<endl;
+				for(int j=0;j<cand_list.size();j++){
+					if(cand_list[j]==Row_idex){
+						cand_list.erase(cand_list.begin()+j);
+						i--;
+						break;
+					}
+				}
+				
+			}
+			B[new_idex][k] = 0;
+		}
+		
+		cout<<"After cand_list : "<<cand_list.size()<<endl;
+		if(!cand_list.empty()){				//¥Nªícandiates ¤¤ ³£¨S¦³cycle6 
+
+			Row_idex = cand_list[rand()%cand_list.size()];
+			new_idex = Row_idex/P;
+			r = Row_idex%P;		// r ¬°±qCPM¤¤¿ï¥X¨Óªº idex
+
+			B[new_idex][k] = (P-r)%P+1; 	//shift size ©ñ¤J Base matrix 
+			LOW_DEG[k][q] = cand_list;		//update LOW_DEG
+			construct_order[k][q] = new_idex;
+			deg[new_idex]++;
+			vis_CN[k].insert(new_idex);	//¹ï¦¹¦ak­Ó col ªº block °µ¼Ð°O ¤w¦³ CPM
+
+			//¤W­±§ä¨ì¤@­Ó­n¥[¤JCPM idex : r					
+		
+			vector<vector<int>> h(P,vector<int>(P,0));
+			CPM(h,r,P);					//±o¨ìCPM h
+			//©ñ¤J¤j H 
+			for(int j=0;j<P;j++){
+				for(int w=0;w<P;w++){
+					if(h[j][w]==1)
+						H[new_idex*P+j][k*P+w]=1;
+				}
+			}
+					
+			
+		}
+		else{
+			cout<<"Enter Backtracking"<<endl;
+			//-----------------------------¦^·¹ top down-------------------------------------
+			//­n³]©wsignalÁ×§K¥Ã»·§ä¤£¨ì cycle 6 free
+
+			//candiate ³£¥Î§¹¥BÁÙ¦³cycle 6
+			// ¦^¨ì q-1­ÓCPM
+			
+			if(q-1>0){
+				
+				int pre_idex = construct_order[k][q-1] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
+				int r = (P-B[pre_idex][k])%P + 1;
+				
+				//¥ý§R°£¤§«e¥Îªºcandidates
+				for(int j=0;j<LOW_DEG[k][q-1].size();j++){
+					int row_idex = pre_idex*P + r;
+
+					if(LOW_DEG[k][q-1][j]==row_idex){
+						LOW_DEG[k][q-1].erase(LOW_DEG[k][q-1].begin()+j);
+						break;
+					}
+					
+				}
+
+				deg[pre_idex]--;							//degree -1
+				vis_CN[k].erase(pre_idex);					//§R°£¤W¤@­Ó«Øªºidex
+				B[pre_idex][k]=0;
+				//CPM¦bHªº¦ì¸m¥þÂk0
+				for(int j=0;j<P;j++){
+					for(int w=0;w<P;w++){
+						H[pre_idex*P+j][k*P+w]=0;
+					}
+				}
+
+				//----------------------------------------------------------------------
+				To_find_CPM(H,P,k,q-1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,1);	//recursion to find another candidates from previous CPM
+			}
+			else{
+				//go to previous col
+				if(k-1==0)
+					return ;
+				else if(k == k_des-2){	//³Ì¦h¦^·¹¨ì«e­±2­Ó 		////////////////////////////test
+					return ;
+				}
+					
+				int pre_q = c-1;
+				int pre_k = k-1;
+				//-----------------------------¦^·¹-------------------------------------
+				int pre_idex = construct_order[pre_k][q] ;	//¤W¤@­Ó«Ø¥ßªºCPM idex
+				deg[pre_idex]--;							//degree -1
+				vis_CN[pre_k].erase(pre_idex);						//§R°£¤W¤@­Ó«Øªºidex
+				B[pre_idex][pre_k]=0;
+				//CPM¦bHªº¦ì¸m¥þÂk0
+				for(int j=0;j<P;j++){
+					for(int w=0;w<P;w++){
+						H[pre_idex*P+j][pre_k*P+w]=0;
+					}
+				}
+
+				//----------------------------------------------------------------------
+				To_find_CPM(H,P,pre_k,pre_q,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,1);	//recursion to find another candidates from previous CPM
+
+			}
+
+		}
+	}
+	
+	
+	//--------------------------------------------------------------------
+	if(k==k_des&&q==q_des)
+		return ;
+	//¦]¬°¦^·¹ ­n§â©|¥¼«Ø¥ß§¹ªº«Ø¥ß¦n bottom up  ¤@¦¸
+	if(k<k_des){
+		//¦V«e­±¨«¤@­Ócol
+		if(q==q_des){
+			q=0;
+			To_find_CPM(H,P,k+1,q,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,0);
+		}
+		else{
+			To_find_CPM(H,P,k,q+1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,0);
+		}
+	}
+	else if(q<q_des){
+		To_find_CPM(H,P,k,q+1,k_des,q_des,vis_CN,B,deg,LOW_DEG,construct_order,0);/////////////////­­¨î¦^·¹¦¸¼Æ ¤@©w¦¸¼Æ¦A¦^§ó¤W­±¦^·¹
 	}	
 	
 	
@@ -434,6 +533,9 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 	int n = t*P;
 	vector<vector<int>> H(m,vector<int>(n,0));
 	unordered_set<int> E;			//¬ö¿ý«e­±VN ©Ò³sªºCN ¤§Áp¶° 
+	vector<unordered_set<int>> vis_CN(t);			//¦s¨út­Ó col ¦U¦Ûªº VN ¤w¸g¦³ weight ªº CN
+
+
 	vector<vector<int>> construct_order(t,vector<int>(dv,-1));	//Àx¦s«Ø¥ßBase ªº¶¶§Ç 
 																//construct_order[k][q] ¥Nªí²Äk­Ócol ²Äq­Ó«Ø¥ßªºCPM idex
 	vector<vector<vector<int>>> LOW_DEG(t,vector<vector<int>>(dv));	//Àx¦s¨C­ÓCPMªºlow_deg_set
@@ -474,7 +576,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 	for(int k=1;k<t;k++){
 		cout<<"CPM VN block: "<<k<<endl;
 		
-		unordered_set<int> vis_CN;			//¦s¨ú¦¹VN ¤w¸g¦³ weight ªº CN 
+		 
 		
 		for(int q=0;q<dv;q++){
 			
@@ -513,7 +615,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 				
 				deg[new_edge]++;
 				
-				vis_CN.insert(new_edge);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM 
+				vis_CN[k].insert(new_edge);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM 
 				
 				construct_order[k][q] = new_edge;
 				//cout<<"q== 0 new_edge: "<<new_edge<<' '<<"shift: "<<r<<endl;
@@ -548,7 +650,7 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 							
 							deg[new_edge]++;
 							
-							vis_CN.insert(new_edge);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM
+							vis_CN[k].insert(new_edge);	//¹ï¦¹block °µ¼Ð°O ¤w¦³ CPM
 							E.insert(new_edge);
 							construct_order[k][q] = new_edge;
 							//cout<<"q== "<<q<<" new_edge: "<<new_edge<<' '<<"shift: "<<r<<endl;
@@ -560,10 +662,9 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 					//------------------------------------------------------------
 
 					//add new CPM and ensure cycle 6 free
-					cout<<"To find"<<endl;
-					//¤U­±­n«Ø¥ß²Äk col ªº²Äq­Ó CPM
+					//¤U­±­n«Ø¥ß²Ä k col ªº²Ä q ­Ó CPM
 
-					To_find_CPM(H,P,k,q,k,q,vis_CN,B,deg,LOW_DEG,construct_order);	//recursion function
+					To_find_CPM(H,P,k,q,k,q,vis_CN,B,deg,LOW_DEG,construct_order,0);	//recursion function
 
 					//---------------------------------------------------------
 					
@@ -574,8 +675,16 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 
 		}
 	}
-	
-	
+	cout<<"construct order"<<endl;
+	display(construct_order);
+	// cout<<"LOW_FEG"<<endl;
+	// for(int i=0;i<c;i++){
+	// 	for(int j=0;j<dv;j++){
+	// 		for(auto e:LOW_DEG[i][j])
+	// 			cout<<e<<" ";
+	// 	}
+	// 	cout<<endl;
+	// }
 	return H;
 	
 }
@@ -586,8 +695,6 @@ vector<vector<int>> QCPEG(int t ,int c,int P,int dv,vector<int>& deg,vector<vect
 int main(){
 	
 	srand(time(0));
-	
-	
 	//***************************************************************************
 	int P ,dv,c,t;
 	cout<<"CPM size: ";
@@ -600,15 +707,11 @@ int main(){
 	cin>>t;												//base matirx  column ¼Æ¶q 
 		
 	
-	
-	
 	int n = t*P;		// H col ¼Æ 
 	int m = c*P;		// H row ¼Æ 
 	
 	vector<vector<int>> h(P,vector<int>(P,0));
-	
 	vector<int> deg(c,0);	//¬ö¿ý CN ªºdegree 
-	
 	vector<vector<int>> B(c,vector<int>(t,0));
 	
 
@@ -626,9 +729,9 @@ int main(){
 	
 	display_B(B);
 	//display(H);
-	// for(auto e:deg)
-	// 	cout<<e<<' ';
-	// cout<<endl;
+	for(auto e:deg)
+		cout<<e<<' ';
+	cout<<endl;
 	
 	
 	// //¼g¤JÀÉ®× CSV

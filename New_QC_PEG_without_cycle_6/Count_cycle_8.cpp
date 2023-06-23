@@ -24,29 +24,29 @@ void display_B(vector<vector<int>>& v){
 	}
 }
 
-void cycle6_DFS(vector<vector<int>>& cycle6,vector<int>& equ,vector<vector<int>>& B,int x,int y,int P,
+void cycle8_DFS(vector<vector<int>>& cycle8,vector<int>& equ,vector<vector<int>>& B,int x,int y,int P,
 int start_x,int start_y,int dir,vector<vector<int>>& vis){
     //dir = 0 represent go up or down
     //dir = 1 represent go left or right
-    
+    //cout<<x<<' '<<y<<endl;
     if(B[x][y]<0)
         return ;
-    if(equ.size()==6&&(x==start_x&&y==start_y)){
-        int sum = ((equ[0]-equ[1]) +(equ[2]-equ[3])+(equ[4]-equ[5]))%P;
+    if(equ.size()==8 && (x==start_x&&y==start_y)){
+        int sum = ((equ[0]-equ[1]) +(equ[2]-equ[3])+(equ[4]-equ[5])+(equ[6]-equ[7]))%P;
 
-        // cout<<"Sum: "<<sum<<endl;
-        // cout<<"equ: "<<endl;
-        // for(auto e:equ){
-        //     cout<<e<<" ";
-        // }
-        // cout<<endl;
-
+       
+    
         if(sum==0){
-            cycle6.push_back(equ);
+            cycle8.push_back(equ);
+            // cout<<"equ: "<<endl;
+            // for(auto e:equ){
+            //     cout<<e<<" ";
+            // }
+            // cout<<endl;
         }
         return ;
     }
-    else if(equ.size()>=6||vis[x][y]==1)
+    else if(equ.size()>=8||vis[x][y]==1)
         return ;
     
     int c = B.size();
@@ -58,7 +58,7 @@ int start_x,int start_y,int dir,vector<vector<int>>& vis){
 
         for(int i=start_x;i<c;i++){
             if(i!=x){
-                cycle6_DFS(cycle6,equ,B,i,y,P,start_x,start_y,1,vis);
+                cycle8_DFS(cycle8,equ,B,i,y,P,start_x,start_y,1,vis);
                 
             }    
         }
@@ -67,16 +67,16 @@ int start_x,int start_y,int dir,vector<vector<int>>& vis){
         if(dir==0){
             for(int i=0;i<c;i++){
                 if(i!=x){
-                    cycle6_DFS(cycle6,equ,B,i,y,P,start_x,start_y,1,vis);
+                    cycle8_DFS(cycle8,equ,B,i,y,P,start_x,start_y,1,vis);
                     
                 }
                 
             }
         }
         else if(dir==1){
-            for(int j=start_y;j<t;j++){
+            for(int j=start_y;j<t;j++){///////////////////////////////////////
                 if(j!=y){
-                    cycle6_DFS(cycle6,equ,B,x,j,P,start_x,start_y,0,vis);
+                    cycle8_DFS(cycle8,equ,B,x,j,P,start_x,start_y,0,vis);
                 }
                     
             }
@@ -86,29 +86,29 @@ int start_x,int start_y,int dir,vector<vector<int>>& vis){
     vis[x][y]=0;
     equ.pop_back();
 }
-int count_cycle6(vector<vector<int>>& B,int P){
+int count_cycle8(vector<vector<int>>& B,int P){
 	
     int c = B.size();
     int t = B[0].size();
     int dir = 0;
     vector<int> equ;
-    vector<vector<int>> cycle6;
+    vector<vector<int>> cycle8;
     
-    for(int i=0;i<c-1;i++){         //0~c-2 row
-        for(int j=0;j<t-2;j++){     //0~j-3 col 
+    for(int i=0;i<c-1;i++){         //0~c-1 row ///////////////////////general 的話要改 
+        for(int j=0;j<=t-3;j++){     //0~j-4 col ///////////////////////general 的話要改 
             vector<int> equ;
             vector<vector<int>> vis(c,vector<int>(t,0));
-            //cout<<"Start : "<<i<<" "<<j<<endl;
-            cycle6_DFS(cycle6,equ,B,i,j,P,i,j,0,vis);
-            //cout<<"Cycle 6 size : "<<cycle6.size()<<endl;
+            cout<<"Start : "<<i<<" "<<j<<endl;
+            cycle8_DFS(cycle8,equ,B,i,j,P,i,j,0,vis);
+            //cout<<"Cycle 8 size : "<<cycle8.size()<<endl;
         }
     }
     
     //--------------------------------------------------
-    //display(cycle6);
+    display(cycle8);
     //--------------------------------------------------
 
-	return cycle6.size()*P;
+	return cycle8.size()*P;
 }
 
 
@@ -146,8 +146,8 @@ int main(){
     
 	//----------------------------------------
 
-    int Num_cycle6 = count_cycle6(B,P);;
-    cout<<"Number of cycle 6: "<<Num_cycle6<<endl;
+    int Num_cycle8 = count_cycle8(B,P);;
+    cout<<"Number of cycle 8: "<<Num_cycle8<<endl;
 
     return 0;
 }
